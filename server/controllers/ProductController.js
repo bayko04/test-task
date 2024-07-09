@@ -60,7 +60,7 @@ export const addProduct = async (req, res) => {
 			.get('products')
 			.insert({
 				...req.body,
-				photoUrl: `/${req?.file?.filename}`,
+				photoUrl: `http://localhost:3002/${req?.file?.filename}`,
 			})
 			.write();
 
