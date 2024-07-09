@@ -79,7 +79,10 @@ export const updateProductById = async (req, res) => {
 		const product = await router.db
 			.get('products')
 			.find({ id: Number(id) })
-			.assign(req.body)
+			.assign({
+				...req.body,
+				photoUrl: `http://localhost:3002/${req?.file?.filename}`,
+			})
 			.write();
 		res.json(product);
 	} catch (err) {
