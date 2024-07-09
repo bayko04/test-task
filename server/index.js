@@ -46,7 +46,7 @@ server.post(
 	ProductController.addProduct
 );
 //обновление товара по id
-server.patch('/products/:id', checkAuth, ProductController.updateProductById);
+server.patch('/products/:id', upload.single('image'), checkAuth, ProductController.updateProductById);
 //удаление товара по id
 server.delete('/products/:id', checkAuth, ProductController.deleteProductById);
 
