@@ -1,12 +1,16 @@
+"use client";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Provider } from "react-redux";
+import store from "@/store/store";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "test-task"
-};
+// export const metadata: Metadata = {
+//   title: "test-task",
+// };
 
 export default function RootLayout({
   children,
@@ -15,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className={`${inter.className} bg-slate-100`}>{children}</body>
+      <body className={`${inter.className} bg-slate-100`}>
+        <Provider store={store}>{children}</Provider>
+      </body>
     </html>
   );
 }
