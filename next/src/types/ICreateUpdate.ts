@@ -1,8 +1,8 @@
-export interface IItem {
+export interface ICreateUpdate {
   name: string;
   quantity: number;
   price: string;
-  photoUrl: string;
+  image: File;
   manufacturerId: number;
   id: number;
 }

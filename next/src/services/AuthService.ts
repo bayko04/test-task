@@ -5,7 +5,7 @@ export default class AuthService {
     return $api.post("/login", { email, password });
   }
 
-  static async checkAuth() {
-    $api.get("/me");
+  static async checkMe() {
+    return $api.get("/me");
   }
 }

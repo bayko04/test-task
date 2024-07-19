@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/reducers/AuthSlice";
 import { useRouter } from "next/navigation";
-import { checkAuth } from "@/store/reducers/AuthSlice";
 
 // export const metadata: Metadata = {
 //   title: "Авторизация",
@@ -15,18 +14,14 @@ import { checkAuth } from "@/store/reducers/AuthSlice";
 export default function Auth() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { data, error, isLoading } = useSelector((state: any) => state.auth);
+  const { data, error, isLoading, isAuth } = useSelector(
+    (state: any) => state.auth
+  );
   const dispatch = useDispatch<any>();
-
   const router = useRouter();
-  const { isAuth } = useSelector((state: any) => state.auth);
-
-  useEffect(() => {
-    dispatch(checkAuth(null));
-  }, []);
 
   if (isAuth) {
-    return router.push("/dashboard");
+    router.push("/products");
   }
 
   console.log(isAuth);

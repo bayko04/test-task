@@ -1,33 +1,72 @@
 "use client";
 
 import Card from "@/components/Card/Card";
+import ChangeModal from "@/components/ChangeModal/ChangeModal";
 import CreateModal from "@/components/CreateModal/CreateModal";
-import Outputs from "@/components/Outputs/Outputs";
+import DeleteModal from "@/components/DeleteModal/DeleteModal";
 import Panel from "@/components/Panel/Panel";
-import Search from "@/components/Search/Search";
 import TableItem from "@/components/TableItem/TableItem";
-import Sidebar from "@/components/layouts/sidebar";
-import { setTablet } from "@/store/reducers/ProductsSlice";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { useAppSelector } from "@/hooks/useAppSelector";
+import { getAllProducts, setTablet } from "@/store/reducers/ProductsSlice";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { IItem } from "@/types/IItem";
+import Sidebar from "@/components/layouts/sidebar";
+import { checkMe } from "@/store/reducers/AuthSlice";
 
 const page = () => {
-  const { tablet, createModal } = useSelector((state: any) => state.products);
-  // const dispatch = useDispatch<any>();
+  const {
+    tablet,
+    createModal,
+    changeModal,
+    deleteModal,
+    products,
+    deleteProductMess,
+  } = useAppSelector((state) => state.products);
+  const { data } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
 
-  // const handleOutput = (type: boolean) => {
-  //   dispatch(setTablet(type));
-  // };
+  useEffect(() => {
+    dispatch(checkMe());
+  }, []);
+
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, []);
 
   return (
     <div className="">
       <div className="container">
         <Panel />
-
-        {tablet && <TableItem />}
-        {!tablet && <Card />}
+        {tablet &&
+          products?.map((item: IItem) => (
+            <TableItem
+              key={item.id}
+              name={item.name}
+              price={item.price}
+              quantity={item.quantity}
+              id={item.id}
+              manufacturerId={item.manufacturerId}
+              photoUrl={item.photoUrl}
+            />
+          ))}
+        <div className="grid grid-cols-4">
+          {!tablet &&
+            products?.map((item: IItem) => (
+              <Card
+                key={item.id}
+                name={item.name}
+                price={item.price}
+                quantity={item.quantity}
+                id={item.id}
+                manufacturerId={item.manufacturerId}
+                photoUrl={item.photoUrl}
+              />
+            ))}
+        </div>
         {createModal && <CreateModal />}
+        {changeModal && <ChangeModal />}
+        {deleteModal && <DeleteModal />}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import $api from "../http/index";
 
-export default class ProductsService {
+export default class AlgorithmsService {
   static async breadcrumbs() {
     return $api.get("/breadcrumbs");
   }

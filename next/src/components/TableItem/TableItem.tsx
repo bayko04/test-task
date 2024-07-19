@@ -1,23 +1,68 @@
 import Image from "next/image";
-import React from "react";
-import lampImg from "@/images/jpg/Rectangle 7.png";
+import { FC } from "react";
 import changeImg from "@/images/svg/change.svg";
 import binImg from "@/images/svg/bin.svg";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import {
+  setChangeModal,
+  setChangingData,
+  setDeleteModal,
+  setDeletingId,
+} from "@/store/reducers/ProductsSlice";
+import { IItem } from "@/types/IItem";
 
-const TableItem = ({}) => {
+const TableItem: FC<IItem> = ({
+  name,
+  quantity,
+  price,
+  photoUrl,
+  id,
+  manufacturerId,
+}) => {
+  const dispatch = useAppDispatch();
+
   return (
-    <div className="w-[100%]">
-      <ul className="flex justify-between items-center">
-        <li>
-          <Image src={lampImg} width={56} height={56} alt="" />
+    <div className="w-[100%] py-[12px] px-[10px]">
+      <ul className="flex gap-[130px] items-center">
+        <li className="flex-[0_0_56px] h-[56px] relative">
+          <Image className="rounded-[6px]" src={photoUrl} fill alt="" />
         </li>
-        <li>Лампа</li>
-        <li>12</li>
-        <li>Ламповый завод</li>
-        <li>12.57 р</li>
+        <li className="flex-[1_1_500px]">{name}</li>
+        <li>{quantity}</li>
+        <li>{manufacturerId}</li>
+        <li>{price}р</li>
         <li className="flex gap-[10px]">
-          <Image src={changeImg} width={20} height={20} alt="" />
-          <Image src={binImg} width={18} height={21} alt="" />
+          <Image
+            onClick={() => {
+              dispatch(setChangeModal(true));
+              dispatch(
+                setChangingData({
+                  name: name,
+                  quantity,
+                  price,
+                  photoUrl,
+                  id,
+                  manufacturerId,
+                })
+              );
+            }}
+            className="cursor-pointer"
+            src={changeImg}
+            width={20}
+            height={20}
+            alt=""
+          />
+          <Image
+            onClick={() => {
+              dispatch(setDeleteModal(true));
+              dispatch(setDeletingId(id));
+            }}
+            className="cursor-pointer"
+            src={binImg}
+            width={18}
+            height={21}
+            alt=""
+          />
         </li>
       </ul>
     </div>

@@ -13,13 +13,12 @@ export const login = createAsyncThunk(
     }
   }
 );
-export const checkAuth = createAsyncThunk(
-  "auth/check",
-  async (_: any, { rejectWithValue }) => {
+export const checkMe = createAsyncThunk(
+  "auth/checkMe",
+  async (_, { rejectWithValue }) => {
     try {
-      const response: any = await AuthService.checkAuth();
-      localStorage.setItem("token", response.data.token);
-      return response.data.token;
+      const response = await AuthService.checkMe();
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
@@ -47,23 +46,22 @@ const AuthSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data = action.payload;
+        state.isAuth = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
       //checkAuth
-      .addCase(checkAuth.pending, (state) => {
+      .addCase(checkMe.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(checkAuth.fulfilled, (state, action) => {
+      .addCase(checkMe.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isAuth = true;
+        state.data = action.payload;
       })
-      .addCase(checkAuth.rejected, (state, action) => {
+      .addCase(checkMe.rejected, (state, action) => {
         state.isLoading = false;
-        state.isAuth = false;
         state.error = action.payload;
       });
   },
