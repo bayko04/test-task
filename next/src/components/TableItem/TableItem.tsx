@@ -23,16 +23,16 @@ const TableItem: FC<IProduct> = ({
   const dispatch = useAppDispatch();
 
   return (
-    <div className="w-[100%] py-[12px] px-[10px]">
-      <ul className="flex gap-[130px] items-center justify-between">
-        <li className="flex-[0_0_56px] h-[56px] relative">
+    <div className="w-[100%] py-[12px] ">
+      <ul className="grid gap-[130px] grid-cols-6">
+        <li className="w-[56px]  h-[56px] relative">
           <Image className="rounded-[6px]" src={photoUrl} fill alt="" />
         </li>
-        <li className="flex-[0_0_250px]">{name}</li>
-        <li className="flex-[0_0_25px]">{quantity}</li>
-        <li className="flex-[0_0_10px]">{manufacturerId}</li>
-        <li className="flex-[0_0_70px]">{price}р</li>
-        <li className="flex gap-[10px]">
+        <li>{name}</li>
+        <li>{quantity}</li>
+        <li>{manufacturerId}</li>
+        <li>{price}р</li>
+        <li className="grid grid-cols-2">
           <Image
             onClick={() => {
               dispatch(setChangeModal(true));

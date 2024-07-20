@@ -12,7 +12,7 @@ import {
 import { useAppSelector } from "@/hooks/useAppSelector";
 
 const DeleteModal: FC = () => {
-  const { continueDelete, deletingId, deletingData } = useAppSelector(
+  const { continueDelete, deletingId, deletingData, pageSw } = useAppSelector(
     (state) => state.products
   );
   const dispatch = useAppDispatch();
@@ -28,7 +28,7 @@ const DeleteModal: FC = () => {
 
   const handleDelete = () => {
     dispatch(deleteProduct({ id: deletingId }));
-    dispatch(getLimitProducts({ page: 1 }));
+    dispatch(getLimitProducts({ page: pageSw }));
     dispatch(setContinueDelete(false));
     dispatch(setDeleteModal(false));
   };

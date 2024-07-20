@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import { IProduct } from "@/types/IProduct";
 import Sidebar from "@/components/layouts/sidebar";
 import { checkMe } from "@/store/features/AuthThunk";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Pagination from "@/components/Pagination/Pagination";
 
 const page = () => {
@@ -25,11 +25,7 @@ const page = () => {
   const { tablet, createModal, changeModal, deleteModal, productsLimit } =
     useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
-  // const router = useRouter();
-
-  // if (!isAuth) {
-  //   router.push("/");
-  // }
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(checkMe());
@@ -38,32 +34,38 @@ const page = () => {
     dispatch(getLimitProducts({ page: 1 }));
   }, []);
 
+  if (!isAuth) {
+    router.push("/");
+  }
+
   return (
     <div className="">
       <Sidebar />
       <div className="container">
         <Panel />
         <div className="">
-          <ul className="flex gap-[130px]">
-            <li className="flex-[0_0_56px]">Фото</li>
-            <li className="flex-[0_0_200px]">Название</li>
-            <li className="flex-[0_0_25px]">Количество</li>
-            <li className="flex-[0_0_10px]">Производитель</li>
-            <li className="flex-[0_0_70px]">Цена</li>
-          </ul>
-
-          {tablet &&
-            productsLimit?.map((item: IProduct) => (
-              <TableItem
-                key={item.id}
-                name={item.name}
-                price={item.price}
-                quantity={item.quantity}
-                id={item.id}
-                manufacturerId={item.manufacturerId}
-                photoUrl={item.photoUrl}
-              />
-            ))}
+          {tablet && (
+            <>
+              <ul className="grid gap-[130px] grid-cols-6">
+                <li>Фото</li>
+                <li>Название</li>
+                <li>Количество</li>
+                <li>Производитель</li>
+                <li>Цена</li>
+              </ul>
+              {productsLimit?.map((item: IProduct) => (
+                <TableItem
+                  key={item.id}
+                  name={item.name}
+                  price={item.price}
+                  quantity={item.quantity}
+                  id={item.id}
+                  manufacturerId={item.manufacturerId}
+                  photoUrl={item.photoUrl}
+                />
+              ))}
+            </>
+          )}
         </div>
         <div className="grid grid-cols-4">
           {!tablet &&

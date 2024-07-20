@@ -33,11 +33,12 @@ const AuthSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.error = false;
         state.isAuth = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = true;
       })
       //checkAuth
       .addCase(checkMe.pending, (state) => {

@@ -3,6 +3,7 @@ import ReactPaginate from "react-paginate";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { getLimitProducts } from "@/store/features/ProductsThunk";
+import { setPageSw } from "@/store/reducers/ProductsSlice";
 
 const Pagination: FC = () => {
   const [pageCount, setPageCount] = useState<number>(0);
@@ -10,7 +11,7 @@ const Pagination: FC = () => {
   const dispatch = useAppDispatch();
 
   const handlePageClick = (event: any) => {
-    console.log(`page ${event.selected}`);
+    dispatch(setPageSw(event.selected + 1));
     dispatch(getLimitProducts({ page: event.selected + 1 }));
   };
 

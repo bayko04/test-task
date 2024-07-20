@@ -1,20 +1,29 @@
+"use client";
+
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { checkMe } from "@/store/features/AuthThunk";
 import { useEffect } from "react";
 import { logout } from "@/store/reducers/AuthSlice";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
-  const { user } = useAppSelector((state) => state.auth);
+  const { user, isAuth } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(checkMe());
   }, []);
 
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/");
+  };
+
   return (
-    <div className="h-screen w-56 bg-slate-100 flex flex-col | fixed left-0 top-0 ">
+    <div className="h-screen w-56 bg-slate-100 flex flex-col | fixed left-0 top-0  z-50">
       <div className="h1-text flex items-center gap-1 justify-center py-3 text-slate-100 mb-6 bg-gray-800 rounded-br-2xl">
         Test
         <Link href="/products">
@@ -94,7 +103,7 @@ const Sidebar = () => {
         </div>
         <div className=" w-full flex justify-between">
           <h6>{user.user.name}</h6>
-          <button onClick={() => dispatch(logout())}>
+          <button onClick={handleLogout}>
             <svg
               width="18"
               height="20"

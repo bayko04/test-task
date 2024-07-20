@@ -15,5 +15,7 @@ export interface IProductsSlice {
   deletingData: any;
   data: any;
   manufacturers: any;
+  changed: boolean;
   created: boolean;
+  pageSw: number;
 }

@@ -28,6 +28,8 @@ const initialState: IProductsSlice = {
   data: null,
   manufacturers: [],
   created: false,
+  changed: false,
+  pageSw: 1,
 };
 
 const productsSlice = createSlice({
@@ -60,6 +62,12 @@ const productsSlice = createSlice({
     },
     setCreated: (state, action) => {
       state.created = action.payload;
+    },
+    setChanged: (state, action) => {
+      state.changed = action.payload;
+    },
+    setPageSw: (state, action) => {
+      state.pageSw = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -163,6 +171,8 @@ export const {
   setChangingData,
   setCreated,
   setDeletingData,
+  setChanged,
+  setPageSw,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;

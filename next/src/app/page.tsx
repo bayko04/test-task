@@ -1,18 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { login } from "@/store/features/AuthThunk";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { useAppSelector } from "@/hooks/useAppSelector";
 
 export default function Auth() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { data, error, isLoading, isAuth } = useSelector(
-    (state: any) => state.auth
-  );
-  const dispatch = useDispatch<any>();
+  const { error, isLoading, isAuth } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   if (isAuth) {
@@ -37,6 +35,11 @@ export default function Auth() {
             <h2 className="text-center">Авторизация</h2>
             <div className="flex flex-col gap-9 pt-8 pb-[10px]">
               <div className="flex flex-col gap-1">
+                {error && (
+                  <div className="bg-[#a0272796] text-[white] inline-block p-[10px] mb-[10px]">
+                    Неверные данные
+                  </div>
+                )}
                 <h6>Почта</h6>
                 <input
                   value={email}
