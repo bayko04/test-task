@@ -2,6 +2,7 @@ export interface IAuthSlice {
   user: IUser;
   isLoading: boolean;
   error: any;
+  errorAuth: any;
   isAuth: boolean;
   isAuthProcessing: boolean;
 }

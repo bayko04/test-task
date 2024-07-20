@@ -9,7 +9,9 @@ import { useAppSelector } from "@/hooks/useAppSelector";
 export default function Auth() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { error, isLoading, isAuth } = useAppSelector((state) => state.auth);
+  const { errorAuth, isLoading, isAuth } = useAppSelector(
+    (state) => state.auth
+  );
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -35,7 +37,7 @@ export default function Auth() {
             <h2 className="text-center">Авторизация</h2>
             <div className="flex flex-col gap-9 pt-8 pb-[10px]">
               <div className="flex flex-col gap-1">
-                {error && (
+                {errorAuth && (
                   <div className="bg-[#a0272796] text-[white] inline-block p-[10px] mb-[10px]">
                     Неверные данные
                   </div>

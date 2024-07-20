@@ -2,8 +2,17 @@
 
 import Sidebar from "@/components/layouts/sidebar";
 import React from "react";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/hooks/useAppSelector";
 
 const page = () => {
+  const { isAuth } = useAppSelector((state) => state.auth);
+  const router = useRouter();
+
+  if (!isAuth) {
+    router.push("/");
+  }
+
   return (
     <div className="mt-[50px]">
       <Sidebar />

@@ -11,6 +11,7 @@ const initialState: IAuthSlice = {
   },
   isLoading: false,
   error: "",
+  errorAuth: "",
   isAuth: false,
   isAuthProcessing: false,
 };
@@ -30,15 +31,17 @@ const AuthSlice = createSlice({
       //login
       .addCase(login.pending, (state) => {
         state.isLoading = true;
+        state.isAuth = false;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.error = false;
+        state.errorAuth = false;
         state.isAuth = true;
       })
       .addCase(login.rejected, (state, action) => {
+        state.isAuth = false;
         state.isLoading = false;
-        state.error = true;
+        state.errorAuth = true;
       })
       //checkAuth
       .addCase(checkMe.pending, (state) => {
