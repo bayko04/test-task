@@ -2,12 +2,13 @@ import React, { FC } from "react";
 import Image from "next/image";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import {
-  deleteProduct,
-  getAllProducts,
-  getLimitProducts,
   setContinueDelete,
   setDeleteModal,
 } from "@/store/reducers/ProductsSlice";
+import {
+  deleteProduct,
+  getLimitProducts,
+} from "@/store/features/ProductsThunk";
 import { useAppSelector } from "@/hooks/useAppSelector";
 
 const DeleteModal: FC = () => {

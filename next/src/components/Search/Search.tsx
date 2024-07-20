@@ -1,15 +1,14 @@
 import { useAppDispatch } from "@/hooks/useAppDispatch";
-import { searchProducts } from "@/store/reducers/ProductsSlice";
+import { searchProducts } from "@/store/features/ProductsThunk";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 
 const Search: FC = () => {
   const dispatch = useAppDispatch();
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = (data: any) => {
     const str = data.search;
-    console.log(str);
     dispatch(searchProducts(str));
   };
 

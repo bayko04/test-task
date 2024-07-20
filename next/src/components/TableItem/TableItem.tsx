@@ -10,9 +10,9 @@ import {
   setDeletingData,
   setDeletingId,
 } from "@/store/reducers/ProductsSlice";
-import { IItem } from "@/types/IItem";
+import { IProduct } from "@/types/IProduct";
 
-const TableItem: FC<IItem> = ({
+const TableItem: FC<IProduct> = ({
   name,
   quantity,
   price,

@@ -1,134 +1,16 @@
-import AuthService from "@/services/AuthService";
-import ProductsService from "@/services/ProductsService";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  getAllProducts,
+  getManufacturers,
+  getLimitProducts,
+  createProduct,
+  updateProductTh,
+  deleteProduct,
+  searchProducts,
+} from "../features/ProductsThunk";
+import { IProductsSlice } from "@/types/IProductsSlice";
 
-// Async Thunks
-export const getAllProducts = createAsyncThunk(
-  "products/getProducts",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await ProductsService.getAllProducts();
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data);
-    }
-  }
-);
-export const getManufacturers = createAsyncThunk(
-  "products/getManufacturers",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await ProductsService.getManufacturers();
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data);
-    }
-  }
-);
-export const getLimitProducts = createAsyncThunk(
-  "products/getLimitProducts",
-  async ({ page }: any, { rejectWithValue }) => {
-    try {
-      const response = await ProductsService.getLimitProducts(page);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data);
-    }
-  }
-);
-
-export const createProduct = createAsyncThunk(
-  "products/createProduct",
-  async (data: any, { rejectWithValue }) => {
-    try {
-      const formData = new FormData();
-      for (const [key, value] of Object.entries(data)) {
-        if (key === "image") {
-          formData.append("image", data.image[0]);
-        } else {
-          formData.append(key, String(value));
-        }
-      }
-
-      const response = await ProductsService.createProduct(formData);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data);
-    }
-  }
-);
-export const updateProductTh = createAsyncThunk(
-  "products/updateProduct",
-  async ({ updatedData, id }: any, { rejectWithValue }) => {
-    try {
-      const formData = new FormData();
-
-      for (const [key, value] of Object.entries(updatedData)) {
-        if (key === "image") {
-          if (value instanceof File) {
-            formData.append("image", value);
-          } else {
-            console.warn(`Unexpected type for image field. Skipping.`);
-          }
-        } else {
-          formData.append(key, String(value));
-        }
-      }
-
-      console.log(updatedData);
-      const response = await ProductsService.updateProduct(formData, id);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data);
-    }
-  }
-);
-export const deleteProduct = createAsyncThunk(
-  "products/deleteProduct",
-  async ({ id }: any, { rejectWithValue }) => {
-    try {
-      const response = await ProductsService.deleteProduct(id);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data);
-    }
-  }
-);
-export const searchProducts = createAsyncThunk(
-  "products/searchProducts",
-  async (name: string, { rejectWithValue }) => {
-    try {
-      const response = await ProductsService.searchProducts(name);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data);
-    }
-  }
-);
-
-// State Interface
-export interface IProducts {
-  isLoading: boolean;
-  tablet: boolean;
-  createModal: boolean;
-  changeModal: boolean;
-  continueDelete: boolean;
-  deleteModal: boolean;
-  products: any;
-  productsLimit: any;
-  error: any;
-  createProductData: any;
-  deleteProductMess: any;
-  deletingId: number;
-  changingData: any;
-  deletingData: any;
-  data: any;
-  manufacturers: any;
-  created: boolean;
-}
-
-// Initial State
-const initialState: IProducts = {
+const initialState: IProductsSlice = {
   isLoading: false,
   error: null,
   products: [],
@@ -148,7 +30,6 @@ const initialState: IProducts = {
   created: false,
 };
 
-// Slice
 const productsSlice = createSlice({
   name: "products",
   initialState,
@@ -177,8 +58,8 @@ const productsSlice = createSlice({
     setDeletingData: (state, action) => {
       state.deletingData = action.payload;
     },
-    setCreated: (state) => {
-      state.created = false;
+    setCreated: (state, action) => {
+      state.created = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -272,7 +153,6 @@ const productsSlice = createSlice({
   },
 });
 
-// Actions & Reducer
 export const {
   setTablet,
   setCreateModal,

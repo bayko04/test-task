@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit/react";
 import { login, checkMe } from "../features/AuthThunk";
+import { IAuthSlice } from "@/types/IAuthSlice";
 
-const initialState: any = {
-  data: "",
+const initialState: IAuthSlice = {
   user: {
     roles: [],
     user: {

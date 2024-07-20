@@ -1,6 +1,6 @@
 import { FC } from "react";
 import Image from "next/image";
-import { IItem } from "@/types/IItem";
+import { IProduct } from "@/types/IProduct";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import {
   setDeleteModal,
@@ -8,7 +8,7 @@ import {
   setDeletingId,
 } from "@/store/reducers/ProductsSlice";
 
-const Card: FC<IItem> = ({
+const Card: FC<IProduct> = ({
   name,
   quantity,
   price,

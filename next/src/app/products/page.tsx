@@ -12,26 +12,24 @@ import {
   getAllProducts,
   getLimitProducts,
   getManufacturers,
-  setTablet,
-} from "@/store/reducers/ProductsSlice";
+} from "@/store/features/ProductsThunk";
 import React, { useEffect, useState } from "react";
-import { IItem } from "@/types/IItem";
+import { IProduct } from "@/types/IProduct";
 import Sidebar from "@/components/layouts/sidebar";
 import { checkMe } from "@/store/features/AuthThunk";
+// import { useRouter } from "next/router";
 import Pagination from "@/components/Pagination/Pagination";
 
 const page = () => {
-  const {
-    tablet,
-    createModal,
-    changeModal,
-    deleteModal,
-    products,
-    productsLimit,
-    deleteProductMess,
-  } = useAppSelector((state) => state.products);
-  const { data } = useAppSelector((state) => state.auth);
+  const { isAuth } = useAppSelector((state) => state.auth);
+  const { tablet, createModal, changeModal, deleteModal, productsLimit } =
+    useAppSelector((state) => state.products);
   const dispatch = useAppDispatch();
+  // const router = useRouter();
+
+  // if (!isAuth) {
+  //   router.push("/");
+  // }
 
   useEffect(() => {
     dispatch(checkMe());
@@ -53,8 +51,9 @@ const page = () => {
             <li className="flex-[0_0_10px]">Производитель</li>
             <li className="flex-[0_0_70px]">Цена</li>
           </ul>
+
           {tablet &&
-            productsLimit?.map((item: IItem) => (
+            productsLimit?.map((item: IProduct) => (
               <TableItem
                 key={item.id}
                 name={item.name}
@@ -68,7 +67,7 @@ const page = () => {
         </div>
         <div className="grid grid-cols-4">
           {!tablet &&
-            productsLimit?.map((item: IItem) => (
+            productsLimit?.map((item: IProduct) => (
               <Card
                 key={item.id}
                 name={item.name}

@@ -13,21 +13,7 @@ export default class ProductsService {
   static async getProduct(id: number) {
     return $api.get(`/products${id}`);
   }
-  static async createProduct(
-    // name: string,
-    // quantity: number,
-    // price: string,
-    // image: File,
-    // manufacturerId: number,
-    // id?: number
-    formData: any
-  ) {
-    // const formData = new FormData();
-    // formData.append("name", name);
-    // formData.append("quantity", quantity.toString());
-    // formData.append("price", price);
-    // formData.append("image", image); // Передаем файл
-    // formData.append("manufacturerId", manufacturerId.toString());
+  static async createProduct(formData: any) {
     return $api.post("/products", formData, {
       headers: {
         "Content-Type": "multipart/form-data",

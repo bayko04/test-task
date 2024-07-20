@@ -2,12 +2,13 @@ import React, { FC } from "react";
 import Image from "next/image";
 import cardImg from "@/images/svg/card.svg";
 import tableImg from "@/images/svg/table.svg";
-import { useDispatch, useSelector } from "react-redux";
 import { setTablet } from "@/store/reducers/ProductsSlice";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { useAppSelector } from "@/hooks/useAppSelector";
 
 const Outputs: FC = () => {
-  const { tablet } = useSelector((state: any) => state.products);
-  const dispatch = useDispatch<any>();
+  const { tablet } = useAppSelector((state) => state.products);
+  const dispatch = useAppDispatch();
 
   const handleOutput = (type: boolean) => {
     dispatch(setTablet(type));

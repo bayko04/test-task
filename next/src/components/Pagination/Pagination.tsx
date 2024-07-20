@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { getLimitProducts } from "@/store/reducers/ProductsSlice";
+import { getLimitProducts } from "@/store/features/ProductsThunk";
 
 const Pagination: FC = () => {
   const [pageCount, setPageCount] = useState<number>(0);

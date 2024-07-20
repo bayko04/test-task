@@ -1,15 +1,10 @@
 "use client";
 
-// import { Metadata } from "next";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/features/AuthThunk";
 import { useRouter } from "next/navigation";
-
-// export const metadata: Metadata = {
-//   title: "Авторизация",
-// };
 
 export default function Auth() {
   const [email, setEmail] = useState<string>("");
@@ -24,13 +19,9 @@ export default function Auth() {
     router.push("/products");
   }
 
-  console.log(isAuth);
-
   const handleLogin = () => {
     dispatch(login({ email, password }));
   };
-
-  console.log(data);
 
   return (
     <div>

@@ -2,14 +2,15 @@ import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import {
   getLimitProducts,
-  setChangeModal,
   updateProductTh,
-} from "@/store/reducers/ProductsSlice";
+} from "@/store/features/ProductsThunk";
+import { setChangeModal } from "@/store/reducers/ProductsSlice";
 import Image from "next/image";
 import { FC, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { IProductFormData } from "@/types/IProductFormData";
 import sendFileImg from "@/images/svg/sendFile.svg";
+import { IManufacturer } from "@/types/IManufacturer";
 
 const ChangeModal: FC = () => {
   const [removeImg, setRemoveImg] = useState<boolean>(false);
@@ -32,7 +33,7 @@ const ChangeModal: FC = () => {
     },
   });
 
-  const [fileName, setFileName] = useState<any>("");
+  const [fileName, setFileName] = useState<string>("");
 
   const handleFileChange = (event: any) => {
     if (event.target.files.length > 0) {
@@ -68,7 +69,7 @@ const ChangeModal: FC = () => {
             id="name"
             {...register("name")}
             className="bg-[#1118271F] w-[100%] rounded-[6px] h-[30px] pl-[10px]"
-            placeholder={changingData?.name || "Введите название"}
+            placeholder={changingData?.name}
             type="text"
           />
         </div>
@@ -80,7 +81,7 @@ const ChangeModal: FC = () => {
             id="quantity"
             {...register("quantity")}
             className="bg-[#1118271F] w-[100%] rounded-[6px] h-[30px] pl-[10px]"
-            placeholder={changingData?.quantity || "Введите количество"}
+            placeholder={changingData?.quantity}
             type="text"
           />
         </div>
@@ -92,7 +93,7 @@ const ChangeModal: FC = () => {
             id="price"
             {...register("price")}
             className="bg-[#1118271F] w-[100%] rounded-[6px] h-[30px] pl-[10px]"
-            placeholder={changingData?.price || "Введите цену"}
+            placeholder={changingData?.price}
             type="text"
           />
         </div>
@@ -105,7 +106,7 @@ const ChangeModal: FC = () => {
             className={`bg-[#1118271F] w-[100%] rounded-[6px] h-[30px] pl-[10px] text-[#11182766] `}
           >
             <option value="">Компания</option>
-            {manufacturers.map((item: any) => (
+            {manufacturers.map((item: IManufacturer) => (
               <option className="text-[black]" key={item.id} value={item.id}>
                 {item.name}
               </option>
@@ -119,7 +120,7 @@ const ChangeModal: FC = () => {
           {!removeImg && (
             <div className="flex justify-between">
               <Image
-                src={changingData.photoUrl || "/default-image.png"}
+                src={changingData.photoUrl}
                 width={56}
                 height={56}
                 alt="Фото товара"

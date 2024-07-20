@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import Search from "../Search/Search";
 import Outputs from "../Outputs/Outputs";
-import { useDispatch } from "react-redux";
 import { setCreateModal } from "@/store/reducers/ProductsSlice";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
 const Panel: FC = () => {
-  const dispatch = useDispatch<any>();
+  const dispatch = useAppDispatch();
 
   return (
     <div className="products mt-[50px] mb-[75px]">
