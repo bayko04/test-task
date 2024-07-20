@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { login } from "@/store/reducers/AuthSlice";
+import { login } from "@/store/features/AuthThunk";
 import { useRouter } from "next/navigation";
 
 // export const metadata: Metadata = {

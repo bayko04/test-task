@@ -7,6 +7,7 @@ import {
   setChangeModal,
   setChangingData,
   setDeleteModal,
+  setDeletingData,
   setDeletingId,
 } from "@/store/reducers/ProductsSlice";
 import { IItem } from "@/types/IItem";
@@ -23,14 +24,14 @@ const TableItem: FC<IItem> = ({
 
   return (
     <div className="w-[100%] py-[12px] px-[10px]">
-      <ul className="flex gap-[130px] items-center">
+      <ul className="flex gap-[130px] items-center justify-between">
         <li className="flex-[0_0_56px] h-[56px] relative">
           <Image className="rounded-[6px]" src={photoUrl} fill alt="" />
         </li>
-        <li className="flex-[1_1_500px]">{name}</li>
-        <li>{quantity}</li>
-        <li>{manufacturerId}</li>
-        <li>{price}р</li>
+        <li className="flex-[0_0_250px]">{name}</li>
+        <li className="flex-[0_0_25px]">{quantity}</li>
+        <li className="flex-[0_0_10px]">{manufacturerId}</li>
+        <li className="flex-[0_0_70px]">{price}р</li>
         <li className="flex gap-[10px]">
           <Image
             onClick={() => {
@@ -56,6 +57,16 @@ const TableItem: FC<IItem> = ({
             onClick={() => {
               dispatch(setDeleteModal(true));
               dispatch(setDeletingId(id));
+              dispatch(
+                setDeletingData({
+                  name: name,
+                  quantity,
+                  price,
+                  photoUrl,
+                  id,
+                  manufacturerId,
+                })
+              );
             }}
             className="cursor-pointer"
             src={binImg}

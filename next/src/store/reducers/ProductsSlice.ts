@@ -14,21 +14,43 @@ export const getAllProducts = createAsyncThunk(
     }
   }
 );
+export const getManufacturers = createAsyncThunk(
+  "products/getManufacturers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await ProductsService.getManufacturers();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+export const getLimitProducts = createAsyncThunk(
+  "products/getLimitProducts",
+  async ({ page }: any, { rejectWithValue }) => {
+    try {
+      const response = await ProductsService.getLimitProducts(page);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
 
 export const createProduct = createAsyncThunk(
   "products/createProduct",
-  async (
-    { name, quantity, price, image, manufacturerId }: any,
-    { rejectWithValue }
-  ) => {
+  async (data: any, { rejectWithValue }) => {
     try {
-      const response = await ProductsService.createProduct(
-        name,
-        quantity,
-        price,
-        image[0],
-        manufacturerId
-      );
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        if (key === "image") {
+          formData.append("image", data.image[0]);
+        } else {
+          formData.append(key, String(value));
+        }
+      }
+
+      const response = await ProductsService.createProduct(formData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -37,20 +59,24 @@ export const createProduct = createAsyncThunk(
 );
 export const updateProductTh = createAsyncThunk(
   "products/updateProduct",
-  async (
-    { name, quantity, price, image, manufacturerId, id }: any,
-    { rejectWithValue }
-  ) => {
+  async ({ updatedData, id }: any, { rejectWithValue }) => {
     try {
-      const response = await ProductsService.updateProduct(
-        name,
-        quantity,
-        price,
-        image[0],
-        manufacturerId,
-        id
-      );
+      const formData = new FormData();
 
+      for (const [key, value] of Object.entries(updatedData)) {
+        if (key === "image") {
+          if (value instanceof File) {
+            formData.append("image", value);
+          } else {
+            console.warn(`Unexpected type for image field. Skipping.`);
+          }
+        } else {
+          formData.append(key, String(value));
+        }
+      }
+
+      console.log(updatedData);
+      const response = await ProductsService.updateProduct(formData, id);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -89,19 +115,24 @@ export interface IProducts {
   continueDelete: boolean;
   deleteModal: boolean;
   products: any;
+  productsLimit: any;
   error: any;
   createProductData: any;
   deleteProductMess: any;
-  deletingId: number | null;
+  deletingId: number;
   changingData: any;
+  deletingData: any;
   data: any;
+  manufacturers: any;
+  created: boolean;
 }
 
 // Initial State
 const initialState: IProducts = {
   isLoading: false,
   error: null,
-  products: null,
+  products: [],
+  productsLimit: [],
   tablet: true,
   createModal: false,
   changeModal: false,
@@ -109,9 +140,12 @@ const initialState: IProducts = {
   continueDelete: false,
   createProductData: "",
   deleteProductMess: "",
-  deletingId: null,
+  deletingId: 0,
   changingData: {},
+  deletingData: {},
   data: null,
+  manufacturers: [],
+  created: false,
 };
 
 // Slice
@@ -140,6 +174,12 @@ const productsSlice = createSlice({
     setChangingData: (state, action) => {
       state.changingData = action.payload;
     },
+    setDeletingData: (state, action) => {
+      state.deletingData = action.payload;
+    },
+    setCreated: (state) => {
+      state.created = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -155,13 +195,39 @@ const productsSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+      // getLimitProducts
+      .addCase(getLimitProducts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getLimitProducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.productsLimit = action.payload;
+      })
+      .addCase(getLimitProducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      // getLimitProducts
+      .addCase(getManufacturers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getManufacturers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.manufacturers = action.payload;
+      })
+      .addCase(getManufacturers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
       // createProduct
       .addCase(createProduct.pending, (state) => {
         state.isLoading = true;
+        state.created = false;
       })
       .addCase(createProduct.fulfilled, (state, action) => {
         state.isLoading = false;
         state.createProductData = action.payload;
+        state.created = true;
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -197,7 +263,7 @@ const productsSlice = createSlice({
       })
       .addCase(searchProducts.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.products = action.payload;
+        state.productsLimit = action.payload;
       })
       .addCase(searchProducts.rejected, (state, action) => {
         state.isLoading = false;
@@ -215,6 +281,8 @@ export const {
   setContinueDelete,
   setDeletingId,
   setChangingData,
+  setCreated,
+  setDeletingData,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;

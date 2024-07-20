@@ -1,9 +1,12 @@
 import { FC } from "react";
-import bigImg from "@/images/jpg/big.jpg";
 import Image from "next/image";
 import { IItem } from "@/types/IItem";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
-import { setDeleteModal, setDeletingId } from "@/store/reducers/ProductsSlice";
+import {
+  setDeleteModal,
+  setDeletingData,
+  setDeletingId,
+} from "@/store/reducers/ProductsSlice";
 
 const Card: FC<IItem> = ({
   name,
@@ -15,19 +18,30 @@ const Card: FC<IItem> = ({
 }) => {
   const dispatch = useAppDispatch();
 
+  const handleDelete = (): void => {
+    dispatch(setDeleteModal(true));
+    dispatch(setDeletingId(id));
+    dispatch(
+      setDeletingData({
+        name: name,
+        quantity,
+        price,
+        photoUrl,
+        id,
+        manufacturerId,
+      })
+    );
+  };
+
   return (
     <div
-      onClick={() => {
-        dispatch(setDeletingId(id));
-        dispatch(setDeleteModal(true));
-      }}
+      onClick={handleDelete}
       className="flex flex-col items-center w-[224px] gap-[5px] cursor-pointer"
     >
-      {/* image */}
       <div className="">
         <Image src={photoUrl} width={224} height={224} alt="" />
       </div>
-      {/* content */}
+
       <h5 className="text-center">{name}</h5>
       <p className="">{manufacturerId}</p>
       <div className="flex items-center justify-between w-[100%]">

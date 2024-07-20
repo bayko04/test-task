@@ -1,43 +1,59 @@
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import {
+  getLimitProducts,
   setChangeModal,
   updateProductTh,
 } from "@/store/reducers/ProductsSlice";
 import Image from "next/image";
-import React from "react";
+import { FC, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { IProductFormData } from "@/types/IProductFormData";
+import sendFileImg from "@/images/svg/sendFile.svg";
 
-interface ProductFormData {
-  name: string;
-  quantity: string;
-  price: string;
-  manufacturerId: string;
-  image?: FileList;
-}
-
-const ChangeModal: React.FC = () => {
-  const { changingData, data, error } = useAppSelector(
+const ChangeModal: FC = () => {
+  const [removeImg, setRemoveImg] = useState<boolean>(false);
+  const { changingData, data, error, manufacturers } = useAppSelector(
     (state) => state.products
   );
   const dispatch = useAppDispatch();
 
-  const { register, handleSubmit, reset, watch } = useForm<ProductFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { dirtyFields },
+  } = useForm<any>({
     defaultValues: {
       name: changingData?.name || "",
       quantity: changingData?.quantity || "",
       price: changingData?.price || "",
       manufacturerId: changingData?.manufacturerId || "",
-      image: undefined,
+      image: changingData?.photoUrl,
     },
   });
 
-  const onSubmit: SubmitHandler<ProductFormData> = (data) => {
-    dispatch(updateProductTh(data));
+  const [fileName, setFileName] = useState<any>("");
+
+  const handleFileChange = (event: any) => {
+    if (event.target.files.length > 0) {
+      setFileName(event.target.files[0].name);
+    }
+  };
+
+  const onSubmit: SubmitHandler<IProductFormData> = (data) => {
+    const updatedData = Object.fromEntries(
+      Object.entries(data).filter(([key]) => dirtyFields[key])
+    );
+    if (data.image) {
+      updatedData.image = data.image[0];
+    }
+    const id = changingData.id;
+    dispatch(updateProductTh({ updatedData, id }));
+    dispatch(getLimitProducts({ page: 1 }));
   };
 
   return (
-    <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-[#fff] py-[16px] px-[10px] w-[340px] flex flex-col gap-[20px]">
+    <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-[#fff] py-[16px] px-[10px] w-[340px] flex flex-col gap-[20px]">
       <h2 className="text-[24px] text-center">Редактирование товара</h2>
 
       <form
@@ -84,33 +100,66 @@ const ChangeModal: React.FC = () => {
           <label className="block" htmlFor="manufacturerId">
             Производитель
           </label>
-          <input
-            id="manufacturerId"
-            {...register("manufacturerId")}
-            className="bg-[#1118271F] w-[100%] rounded-[6px] h-[30px] pl-[10px]"
-            placeholder={
-              changingData?.manufacturerId || "Введите производителя"
-            }
-            type="text"
-          />
+          <select
+            {...register("manufacturerId", { required: "Выберите компанию" })}
+            className={`bg-[#1118271F] w-[100%] rounded-[6px] h-[30px] pl-[10px] text-[#11182766] `}
+          >
+            <option value="">Компания</option>
+            {manufacturers.map((item: any) => (
+              <option className="text-[black]" key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label className="block" htmlFor="image">
             Фото
           </label>
-          {/* <input
-            id="image"
-            {...register("image")}
-            className="bg-[#1118271F] w-[100%] rounded-[6px] h-[30px] pl-[10px]"
-            placeholder="Фото"
-            type="file"
-          /> */}
-          <Image
-            src={changingData.photoUrl || "/default-image.png"}
-            width={56}
-            height={56}
-            alt="Фото товара"
-          />
+          {!removeImg && (
+            <div className="flex justify-between">
+              <Image
+                src={changingData.photoUrl || "/default-image.png"}
+                width={56}
+                height={56}
+                alt="Фото товара"
+              />
+              <p
+                className={`text-[12px] flex-[0_0_200px] break-all text-[#4B5563] `}
+              >
+                {changingData.photoUrl}
+                <button
+                  onClick={() => setRemoveImg(true)}
+                  className="w-[13px] h-[13px] after-inp-change"
+                ></button>
+              </p>
+            </div>
+          )}
+          {removeImg && (
+            <div className="relative">
+              <input
+                {...register("image")}
+                className="bg-[#1118271F] absolute cursor-pointer top-0 left-0 w-[100%] h-[85px] rounded-[6px] h-[30px] pl-[10px] opacity-0"
+                placeholder="Фото"
+                type="file"
+                onChange={handleFileChange}
+              />
+
+              <label
+                htmlFor="file-input"
+                className="flex flex-col items-center justify-center py-[10px] px-[20px] rounded-[5px]"
+              >
+                {fileName ? fileName : "Загрузить фото"}
+                <Image
+                  src={sendFileImg}
+                  width={21}
+                  height={18}
+                  alt="Upload Icon"
+                  className="mt-[10px]"
+                />{" "}
+              </label>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-end gap-[10px]">

@@ -1,16 +1,17 @@
-import React from "react";
+import React, { FC } from "react";
 import Image from "next/image";
-import lampImg from "@/images/jpg/big.jpg";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import {
   deleteProduct,
+  getAllProducts,
+  getLimitProducts,
   setContinueDelete,
   setDeleteModal,
 } from "@/store/reducers/ProductsSlice";
 import { useAppSelector } from "@/hooks/useAppSelector";
 
-const DeleteModal = () => {
-  const { continueDelete, deletingId } = useAppSelector(
+const DeleteModal: FC = () => {
+  const { continueDelete, deletingId, deletingData } = useAppSelector(
     (state) => state.products
   );
   const dispatch = useAppDispatch();
@@ -25,23 +26,30 @@ const DeleteModal = () => {
   };
 
   const handleDelete = () => {
-    dispatch(deleteProduct(deletingId));
+    dispatch(deleteProduct({ id: deletingId }));
+    dispatch(getLimitProducts({ page: 1 }));
+    dispatch(setContinueDelete(false));
+    dispatch(setDeleteModal(false));
   };
-  console.log(deletingId);
 
   return (
-    <div className=" w-[340px] rounded-[10px] bg-[#fff] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+    <div className="fixed w-[340px] rounded-[10px] bg-[#fff] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
       {!continueDelete && (
         <div className="py-[16px] px-[10px] flex flex-col gap-[20px]">
           <div className="self-center">
-            <Image src={lampImg} width={224} height={224} alt="" />
+            <Image
+              src={deletingData.photoUrl}
+              width={224}
+              height={224}
+              alt=""
+            />
           </div>
 
-          <h1 className="text-center">Лампа</h1>
+          <h1 className="text-center leading-[25px]">{deletingData.name}</h1>
 
-          <p>Количество: 12</p>
-          <p>Цена: 12.57 р</p>
-          <p>Производитель: Ламповый завод</p>
+          <p>Количество: {deletingData.quantity}</p>
+          <p>Цена: {deletingData.price} р</p>
+          <p>Производитель: {deletingData.manufacturerId}</p>
 
           <div className="self-end flex gap-[10px]">
             <button

@@ -1,8 +1,9 @@
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { searchProducts } from "@/store/reducers/ProductsSlice";
+import { FC } from "react";
 import { useForm } from "react-hook-form";
 
-const Search = () => {
+const Search: FC = () => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit, reset } = useForm();
 
@@ -13,7 +14,7 @@ const Search = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="">
+    <form onSubmit={handleSubmit(onSubmit)}>
       <input
         {...register("search")}
         className="bg-[#1118271F] w-[240px] h-[30px] rounded-[6px] pl-[6px]"

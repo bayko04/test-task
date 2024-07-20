@@ -1,11 +1,11 @@
-import React from "react";
+import React, { FC } from "react";
 import Image from "next/image";
 import cardImg from "@/images/svg/card.svg";
 import tableImg from "@/images/svg/table.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { setTablet } from "@/store/reducers/ProductsSlice";
 
-const Outputs = () => {
+const Outputs: FC = () => {
   const { tablet } = useSelector((state: any) => state.products);
   const dispatch = useDispatch<any>();
 
@@ -18,8 +18,8 @@ const Outputs = () => {
       <div className="flex items-center h-[40px]">
         <div
           onClick={() => handleOutput(true)}
-          className={`table relative cursor-pointer bg-[#CBD5E1] px-[10px] w-[50px] h-[100%] rounded-l-lg ${
-            tablet ? "bg-[#94A3B8]" : "#CBD5E1"
+          className={`table relative cursor-pointer px-[10px] w-[50px] h-[100%] rounded-l-lg ${
+            tablet ? "bg-[#94A3B8]" : "bg-[#CBD5E1]"
           }`}
         >
           <Image
@@ -32,8 +32,8 @@ const Outputs = () => {
         </div>
         <div
           onClick={() => handleOutput(false)}
-          className={`card relative cursor-pointer r bg-[#CBD5E1] px-[10px] h-[100%] w-[50px] rounded-r-lg bg-[#CBD5E1]  rounded-r-lg ${
-            !tablet ? "bg-[#94A3B8]" : "#CBD5E1"
+          className={`card relative cursor-pointer px-[10px] h-[100%] w-[50px] rounded-r-lg rounded-r-lg ${
+            !tablet ? "bg-[#94A3B8]" : "bg-[#CBD5E1]"
           }`}
         >
           <Image

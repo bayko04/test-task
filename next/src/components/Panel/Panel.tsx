@@ -1,12 +1,10 @@
-import React from "react";
+import React, { FC } from "react";
 import Search from "../Search/Search";
 import Outputs from "../Outputs/Outputs";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 import { setCreateModal } from "@/store/reducers/ProductsSlice";
 
-const Panel = () => {
-  const { createModal } = useSelector((state: any) => state.products);
+const Panel: FC = () => {
   const dispatch = useDispatch<any>();
 
   return (
@@ -20,7 +18,7 @@ const Panel = () => {
             <div className="">
               <button
                 onClick={() => dispatch(setCreateModal(true))}
-                className="bg-[#CBD5E1] rounded-[6px] px-[25px] py-[10px]"
+                className="bg-[#CBD5E1] rounded-[6px] px-[25px] py-[10px] hover:bg-[#94A3B8]"
               >
                 Добавить
               </button>

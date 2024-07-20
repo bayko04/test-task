@@ -1,32 +1,14 @@
-import AuthService from "@/services/AuthService";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit/react";
-
-export const login = createAsyncThunk(
-  "auth/login",
-  async ({ email, password }: any, { rejectWithValue }) => {
-    try {
-      const response: any = await AuthService.login(email, password);
-      localStorage.setItem("token", response.data.token);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-export const checkMe = createAsyncThunk(
-  "auth/checkMe",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await AuthService.checkMe();
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+import { login, checkMe } from "../features/AuthThunk";
 
 const initialState: any = {
   data: "",
+  user: {
+    roles: [],
+    user: {
+      name: "",
+    },
+  },
   isLoading: false,
   error: "",
   isAuth: false,
@@ -36,7 +18,12 @@ const initialState: any = {
 const AuthSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      localStorage.clear();
+      state.isAuth = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
 
@@ -58,7 +45,7 @@ const AuthSlice = createSlice({
       })
       .addCase(checkMe.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data = action.payload;
+        state.user = action.payload;
       })
       .addCase(checkMe.rejected, (state, action) => {
         state.isLoading = false;
@@ -67,4 +54,5 @@ const AuthSlice = createSlice({
   },
 });
 
+export const { logout } = AuthSlice.actions;
 export default AuthSlice.reducer;
